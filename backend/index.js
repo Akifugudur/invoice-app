@@ -1,3 +1,4 @@
+const authenticateToken = require('./authMiddleware');
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
@@ -78,7 +79,7 @@ app.post('/login', async (req, res) => {
 });
 
 // ✅ PRODUCT CREATE ROUTE
-app.post('/products', async (req, res) => {
+app.post('/products',authenticateToken, async (req, res) => {
   const { name, sku, compatible_with, quantity, price } = req.body;
 
   try {
