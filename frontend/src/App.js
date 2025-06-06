@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import Login from './Login';
+import Products from './Products';
+import Customers from './Customers';
+import InvoiceForm from './InvoiceForm';
 
 function App() {
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken && savedToken !== 'null') {
+      setToken(savedToken);
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Invoice App</h1>
+      {token ? (
+        <>
+          <Products token={token} />
+          <Customers token={token} />
+          <InvoiceForm token={token} />
+        </>
+      ) : (
+        <Login
+          onLogin={(t) => {
+            localStorage.setItem('token', t);
+            setToken(t);
+          }}
+        />
+      )}
     </div>
   );
 }

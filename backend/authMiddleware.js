@@ -1,6 +1,14 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+function requireAdmin(req, res, next) {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin privileges required' });
+  }
+  next();
+}
+
+
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
@@ -19,4 +27,7 @@ function authenticateToken(req, res, next) {
   });
 }
 
-module.exports = authenticateToken;
+module.exports = {
+  authenticateToken,
+  requireAdmin
+};
